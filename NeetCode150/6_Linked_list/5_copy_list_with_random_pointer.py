@@ -14,4 +14,58 @@ The linked list is represented in the input/output as a list of n nodes. Each no
 val: an integer representing Node.val
 random_index: the index of the node (range from 0 to n-1) that the random pointer points to, or null if it does not point to any node.
 Your code will only be given the head of the original linked list.
+
+
+Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+
+Observations:
+-> every single node has a random pointer to another node in the lsit
+-> We have to look into how to create a link to the subsequent nodes
+
+Edge cases:
+-> The node might to another node which is not yet created
+-> the node might point to None which is not a node
+
+Algorithm:
+-> We will use two passes
+-> we will use a hash to store a maps of old and their new node copies
+-> Iterate through the old list while mapping them and creating copy nodes witjout any links
+-> now iterate the second time linking the next and random pointers using the hashmap
+-> retrive the first head in the copy list using map[head]
+-> make sure the None edge case is handled in the hasmp
 """
+from typing import Optional
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+class Solution:
+
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+
+        curr = head
+        old_to_copy = {None: None}
+        while curr:
+            copy = ListNode(curr.val)
+            old_to_copy[curr] = copy
+            curr = curr.next
+
+
+        curr = head
+        while curr:
+            copy = old_to_copy[curr]
+            copy.next = old_to_copy[curr.next]
+            copy.random = old_to_copy[curr.random]
+            curr = curr.next
+
+
+
+        return old_to_copy[head]
+
+
+
+
+
